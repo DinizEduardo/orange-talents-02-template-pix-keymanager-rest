@@ -1,4 +1,4 @@
-package br.com.zup.registraChave
+package br.com.zup.pix.registraChave
 
 import br.com.zup.PixRegistraChaveGrpcServiceGrpc
 import io.grpc.Status

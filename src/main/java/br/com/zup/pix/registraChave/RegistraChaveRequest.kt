@@ -1,6 +1,8 @@
-package br.com.zup.registraChave
+package br.com.zup.pix.registraChave
 
 import br.com.zup.RegistraChavePixRequest
+import br.com.zup.pix.TipoChave
+import br.com.zup.pix.TipoConta
 
 class RegistraChaveRequest(
     val clienteId: String,
