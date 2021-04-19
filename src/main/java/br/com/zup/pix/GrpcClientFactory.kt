@@ -1,6 +1,7 @@
 package br.com.zup.pix
 
 import br.com.zup.PixConsultaChaveGrpcServiceGrpc
+import br.com.zup.PixListaChavesPorClienteGrpcServiceGrpc
 import br.com.zup.PixRegistraChaveGrpcServiceGrpc
 import br.com.zup.PixRemoveChaveGrpcServiceGrpc
 import io.grpc.ManagedChannel
@@ -32,6 +33,14 @@ class GrpcClientFactory {
             : PixConsultaChaveGrpcServiceGrpc.PixConsultaChaveGrpcServiceBlockingStub? {
 
         return PixConsultaChaveGrpcServiceGrpc.newBlockingStub(channel)
+
+    }
+
+    @Singleton
+    fun listaChaveStub(@GrpcChannel("localhost:50051") channel: ManagedChannel)
+    : PixListaChavesPorClienteGrpcServiceGrpc.PixListaChavesPorClienteGrpcServiceBlockingStub? {
+
+        return PixListaChavesPorClienteGrpcServiceGrpc.newBlockingStub(channel)
 
     }
 
