@@ -20,27 +20,11 @@ class RegistraChaveController(
 
         val request = form.toModel()
 
-        try {
-
-            val response = grpcClient.registra(request)
+        val response = grpcClient.registra(request)
 //            RegistraChaveResponse(clienteId = response.clienteId, pixId = response.pixId)
 
-            return RegistraChaveResponse(clienteId = response.clienteId, pixId = response.pixId)
+        return RegistraChaveResponse(clienteId = response.clienteId, pixId = response.pixId)
 
-        }catch (e: StatusRuntimeException) {
-
-            val statusCode = e.status.code
-            val description = e.status.description
-
-            if(statusCode == Status.Code.INVALID_ARGUMENT) {
-                throw HttpStatusException(HttpStatus.BAD_REQUEST, description)
-            }else if(statusCode == Status.Code.ALREADY_EXISTS) {
-                throw HttpStatusException(HttpStatus.UNPROCESSABLE_ENTITY, description)
-            }
-
-            throw HttpStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
-
-        }
 
     }
 

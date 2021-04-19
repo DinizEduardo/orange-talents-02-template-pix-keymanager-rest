@@ -42,6 +42,21 @@ java {
     targetCompatibility = JavaVersion.toVersion("11")
 }
 
+tasks {
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = "11"
+        }
+    }
+    compileTestKotlin {
+        kotlinOptions {
+            jvmTarget = "11"
+        }
+    }
+
+
+}
+
 
 
 sourceSets {

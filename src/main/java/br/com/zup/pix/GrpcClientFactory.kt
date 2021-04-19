@@ -1,5 +1,6 @@
 package br.com.zup.pix
 
+import br.com.zup.PixConsultaChaveGrpcServiceGrpc
 import br.com.zup.PixRegistraChaveGrpcServiceGrpc
 import br.com.zup.PixRemoveChaveGrpcServiceGrpc
 import io.grpc.ManagedChannel
@@ -19,10 +20,18 @@ class GrpcClientFactory {
     }
 
     @Singleton
-    fun removeClienteStub(@GrpcChannel("localhost:50051") channel: ManagedChannel) :
+    fun removeClienteStub(@GrpcChannel("localhost:50051") channel: ManagedChannel):
             PixRemoveChaveGrpcServiceGrpc.PixRemoveChaveGrpcServiceBlockingStub? {
 
         return PixRemoveChaveGrpcServiceGrpc.newBlockingStub(channel)
+
+    }
+
+    @Singleton
+    fun detalhaChaveStub(@GrpcChannel("localhost:50051") channel: ManagedChannel)
+            : PixConsultaChaveGrpcServiceGrpc.PixConsultaChaveGrpcServiceBlockingStub? {
+
+        return PixConsultaChaveGrpcServiceGrpc.newBlockingStub(channel)
 
     }
 

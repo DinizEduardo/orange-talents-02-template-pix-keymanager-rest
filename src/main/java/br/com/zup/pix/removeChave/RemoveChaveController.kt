@@ -18,7 +18,7 @@ class RemoveChaveController(
     fun remove(
         clienteId: UUID,
         pixId: UUID
-    ) : UUID {
+    ) : HttpResponse<Any> {
 
         grpcRemove.remove(RemoveChavePixRequest.newBuilder()
             .setClienteId(clienteId.toString())
@@ -26,7 +26,7 @@ class RemoveChaveController(
             .build()
         )
 
-        return pixId
+        return HttpResponse.ok()
     }
 
 }
