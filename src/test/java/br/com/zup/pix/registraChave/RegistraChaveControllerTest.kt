@@ -1,6 +1,7 @@
 package br.com.zup.pix.registraChave
 
 import br.com.zup.PixRegistraChaveGrpcServiceGrpc
+import br.com.zup.RegistraChavePixRequest
 import br.com.zup.RegistraChavePixResponse
 import br.com.zup.pix.GrpcClientFactory
 import br.com.zup.pix.TipoChave
@@ -67,7 +68,16 @@ internal class RegistraChaveControllerTest() {
     fun `nao deveria registrar chave duplicada`() {
         val clienteId = UUID.randomUUID().toString()
 
-        given(registraStub.registra(Mockito.any())).willThrow(StatusRuntimeException(Status.ALREADY_EXISTS))
+        given(
+            registraStub.registra(
+                RegistraChavePixRequest.newBuilder()
+                    .setClienteId(clienteId)
+                    .setTipoChave(br.com.zup.TipoChave.EMAIL)
+                    .setTipoConta(br.com.zup.TipoConta.CONTA_CORRENTE)
+                    .setChave("eduardo@zup.com.br")
+                    .build()
+            )
+        ).willThrow(StatusRuntimeException(Status.ALREADY_EXISTS))
 
         val novaChave = RegistraChaveRequest(
             clienteId = clienteId,
@@ -169,12 +179,44 @@ internal class RegistraChaveControllerTest() {
 
     }
 
+    @Test
+    fun `nao deveria registrar com um erro no grpc`() {
+        val clienteId = UUID.randomUUID().toString()
+
+        given(
+            registraStub.registra(
+                RegistraChavePixRequest.newBuilder()
+                    .setClienteId(clienteId)
+                    .setTipoChave(br.com.zup.TipoChave.EMAIL)
+                    .setTipoConta(br.com.zup.TipoConta.CONTA_CORRENTE)
+                    .setChave("eduardo@zup.com.br")
+                    .build()
+            )
+        ).willThrow(StatusRuntimeException(Status.INTERNAL))
+
+        val novaChave = RegistraChaveRequest(
+            clienteId = clienteId,
+            tipoChave = TipoChaveRequest.EMAIL,
+            tipoConta = CONTA_CORRENTE,
+            chave = "eduardo@zup.com.br"
+        )
+
+        val request = HttpRequest.POST("/api/chaves", novaChave)
+        val thrown = assertThrows<HttpClientResponseException> {
+            client.toBlocking().exchange(request, RegistraChaveResponse::class.java)
+        }
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.status)
+
+    }
+
     @Factory
     @Replaces(factory = GrpcClientFactory::class)
     internal class MockitoStubFactory {
 
         @Singleton
-        fun stubMock() = Mockito.mock(PixRegistraChaveGrpcServiceGrpc.PixRegistraChaveGrpcServiceBlockingStub::class.java)
+        fun stubMock() =
+            Mockito.mock(PixRegistraChaveGrpcServiceGrpc.PixRegistraChaveGrpcServiceBlockingStub::class.java)
 
     }
 

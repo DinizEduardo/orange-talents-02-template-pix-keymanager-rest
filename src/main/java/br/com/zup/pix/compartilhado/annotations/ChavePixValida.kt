@@ -26,10 +26,6 @@ class ChavePixValidaValidator : ConstraintValidator<ChavePixValida, RegistraChav
                          annotationMetadata: AnnotationValue<ChavePixValida>,
                          context: ConstraintValidatorContext): Boolean {
 
-        if (value?.tipoChave == null) {
-            return false
-        }
-
-        return value.tipoChave.valida(value.chave)
+        return value!!.tipoChave.valida(value.chave)
     }
 }
